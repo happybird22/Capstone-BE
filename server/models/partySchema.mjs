@@ -5,8 +5,12 @@ const partySchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
-            unique: true,
             trim: true,
+        },
+        inviteCode: {
+            type: String,
+            required: true,
+            unique: true,
         },
         gm: {
             type: mongoose.Schema.Types.ObjectId,

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from './server/db/conn.mjs';
 import globalError from './server/middleware/globalErr.mjs';
 import authRoutes from './server/routes/authRoutes.mjs';
+import partyRoutes from './server/routes/partyRoutes.mjs';
 
 // Setups
 connectDB();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/parties', partyRoutes);
 
 // Global ErrorHandling Middleware
 app.use(globalError)
