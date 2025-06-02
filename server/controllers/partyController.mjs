@@ -28,7 +28,7 @@ export const createParty = async (req, res) => {
         members: [gmId],
     });
 
-    await User.findByIdAndUpdate(gmId, { partyID: newParty._id });
+    await User.findByIdAndUpdate(gmId, { partyId: newParty._id });
 
     res.status(201).json({
         name: newParty.name,
@@ -52,7 +52,7 @@ export const joinParty = async (req, res) => {
         return res.status(400).json({ message: 'Already in party' });
     }
 
-    party.mambers.push(userId);
+    party.members.push(userId);
     await party.save();
     await User.findByIdAndUpdate(userId, { partyId: party._id });
 

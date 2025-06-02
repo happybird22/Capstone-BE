@@ -5,7 +5,7 @@ import { createSessionNote, deleteNote, editNote, getSessionNotes } from '../con
 const router = express.Router();
 
 router.post('/create', protect, createSessionNote);
-router.post('/', protect, getSessionNotes);
+router.get('/', protect, getSessionNotes);
 router.put('/:id', protect, editNote);
 router.delete('/:id', protect, deleteNote);
 

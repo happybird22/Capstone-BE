@@ -13,7 +13,7 @@ export const createSessionNote = async (req, res) => {
     } = req.body;
 
     try {
-        const newNote = SessionNote.create({
+        const newNote = await SessionNote.create({
         campaignTitle,
         sessionDate,
         notes,
@@ -81,7 +81,7 @@ export const deleteNote = async (req, res) => {
     const noteId = req.params.id;
 
     try {
-        const note = await SessionNote.findById(noteID);
+        const note = await SessionNote.findById(noteId);
         if (!note) return res.status(404).json({ message: 'Note not found' });
 
         if (!note.author.equals(req.user._id)) {

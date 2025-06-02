@@ -8,8 +8,8 @@ import partyRoutes from './server/routes/partyRoutes.mjs';
 import noteRoutes from './server/routes/noteRoutes.mjs';
 
 // Setups
-connectDB();
 dotenv.config();
+connectDB();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
