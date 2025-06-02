@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from "dotenv";
 import connectDB from './server/db/conn.mjs';
 import globalError from './server/middleware/globalErr.mjs';
+import authRoutes from './server/routes/authRoutes.mjs';
 
 // Setups
 connectDB();
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 
 // Global ErrorHandling Middleware
 app.use(globalError)
