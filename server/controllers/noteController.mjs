@@ -23,7 +23,7 @@ export const createSessionNote = async (req, res) => {
         author: req.user._id,
         partyId: req.user.partyId,
         visibility: visibility || 'private',
-        sharedWith: visibility === 'one' ? shareWith : [],
+        sharedWith: visibility === 'one' ? sharedWith : [],
         });
 
         res.status(201).json(newNote);
@@ -72,5 +72,70 @@ export const getSessionNotes = async (req, res) => {
         res.status(200).json(notes);
     } catch (err) {
         res.status(500).json({ message: 'Failed to find notes', error: err.message });
+    }
+};
+
+// Delete a note
+
+export const deleteNote = async (req, res) => {
+    const noteId = req.params.id;
+
+    try {
+        const note = await SessionNote.findById(noteID);
+        if (!note) return res.status(404).json({ message: 'Note not found' });
+
+        if (!note.author.equals(req.user._id)) {
+            return res.status(403).json({ message: 'Not authorized to delete this note' });
+        }
+
+        await note.deleteOne();
+        res.status(200).json({ message: 'Note successfully deleted' });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to delete note', error: err.message });
+    }
+};
+
+// Edit Note
+
+export const editNote = async (req, res) => {
+    const noteId = req.params.id;
+
+    try {
+        const note = await SessionNote.findById(noteId);
+        if (!note) return res.status(404).json({ message: 'Note not found' });
+
+        if (!note.author.equals(req.user._id)) {
+            return res.status(403).json({ message: 'Not authorized to edit this note' });
+        }
+
+        const {
+        campaignTitle,
+        sessionDate,
+        notes,
+        notableNPCs,
+        notablePlaces,
+        memorableMoments,
+        visibility,
+        sharedWith,
+    } = req.body;
+
+    note.campaignTitle = campaignTitle ?? note.campaignTitle;
+    note.sessionDate = sessionDate ?? note.sessionDate;
+    note.notes = notes ?? note.notes;
+    note.notableNPCs = notableNPCs ?? note.notableNPCs;
+    note.notablePlaces = notablePlaces ?? note.notablePlaces;
+    note.memorableMoments = memorableMoments ?? note.memorableMoments;
+    note.visibility = visibility ?? note.visibility;
+
+    if (visibility === 'one') {
+        note.sharedWith = sharedWith ?? note.sharedWith;
+    } else {
+        note.sharedWith = [];
+    }
+
+    const updatedNote = await note.save();
+    res.status(200).json(updatedNote);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to update note', error: err.message });
     }
 };
