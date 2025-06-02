@@ -5,6 +5,7 @@ import connectDB from './server/db/conn.mjs';
 import globalError from './server/middleware/globalErr.mjs';
 import authRoutes from './server/routes/authRoutes.mjs';
 import partyRoutes from './server/routes/partyRoutes.mjs';
+import noteRoutes from './server/routes/noteRoutes.mjs';
 
 // Setups
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/parties', partyRoutes);
+app.use('/api/session-notes', noteRoutes);
 
 // Global ErrorHandling Middleware
 app.use(globalError)
