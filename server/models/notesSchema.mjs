@@ -15,12 +15,8 @@ const noteSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        notableNPCs: {
-            type: String,
-        },
-        notablePlaces: {
-            type: String,
-        },
+        notableNPCs: [{ type: String }],
+        notablePlaces: [{ type: String}],
 
         memorableMoments: {
             type: String,

@@ -22,10 +22,10 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ['Player', 'GM'],
+            enum: ['player', 'gm'],
             default: 'Player',
         },
-        partyID: {
+        partyId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Party',
         },
