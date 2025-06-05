@@ -20,6 +20,13 @@ export const registerUser = async (req, res) => {
     const { username, email, password, role } = req.body;
 
     try {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                message: "Password must be at least 8 character long and include at least one letter and one number.",
+            });
+        }
+        
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists'});
 
