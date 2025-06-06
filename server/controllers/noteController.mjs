@@ -64,6 +64,14 @@ export const getSessionNotes = async (req, res) => {
             filter.notablePlaces = { $regex: place, $options: 'i' };
         }
 
+        if (req.query.campaign) {
+            filter.campaignTitle = { $regex: req.query.campaign, $options: 'i' };
+        }
+
+        if (req.query.partyId) {
+            filter.partyId = req.query.partyId;
+        }
+
         const notes = await SessionNote.find(filter)
         .sort({ sessionDate: -1 })
         .populate('author', 'username')

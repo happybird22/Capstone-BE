@@ -58,3 +58,23 @@ export const joinParty = async (req, res) => {
 
     res.status(200).json({ message: 'Successfully joined party!', partyId: party._id });
 };
+
+// @desc get users parties
+// @route GET /api/parties/mine
+// @access Private
+export const getUserParties = async (req, res) => {
+    const userId = req.user._id;
+    const role = req.user.role;
+
+    try {
+        const query = role === 'gm'
+        ? { gm: userId }
+        : { members: userId };
+
+        const parties = await Party.find(query).select('_id name');
+        res.status(200).json(parties);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch parties', error: err.message });
+    }
+};
+
