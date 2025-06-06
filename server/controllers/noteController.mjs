@@ -147,3 +147,29 @@ export const editNote = async (req, res) => {
         res.status(500).json({ message: 'Failed to update note', error: err.message });
     }
 };
+
+// Get one note by ID
+export const getSessionNoteById = async (req, res) => {
+    const userId = req.user._id;
+    const noteId = req.params.id;
+
+    try {
+        const note = await SessionNote.findById(noteId);
+
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+
+        const isOwner = note.user.equals(userId);
+        const isGM = req.user.role === 'gm';
+        const isShared = note.visibility === 'shared' || note.sharedWith.includes(userId);
+
+        if (!isOwner && !isGM && !isShared) {
+            return res.status(403).json({ message: 'Not authorized to view this note' });
+        }
+
+        res.status(200).json(note);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch note', error: err.message });
+    }
+};
