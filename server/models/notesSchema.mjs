@@ -23,7 +23,7 @@ const noteSchema = new mongoose.Schema(
         },
 
         author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-        partyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Party', required: true },
+        partyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Party', required: false },
 
         visibility: {
             type: String,

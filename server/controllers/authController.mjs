@@ -26,21 +26,29 @@ export const registerUser = async (req, res) => {
                 message: "Password must be at least 8 character long and include at least one letter and one number.",
             });
         }
-        
+
         const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: 'User already exists'});
+        if (userExists) return res.status(400).json({ message: 'User already exists' });
 
         const newUser = await User.create({ username, email, password, role });
 
         const token = generateToken(newUser);
-        res.status(201).json({
-            _id: newUser._id,
-            username: newUser.username,
-            email: newUser.email,
-            role: newUser.role,
-            partyID: newUser.partyID,
-            token,
-        });
+        res
+            .cookie('jwt', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: 'Lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            })
+            .status(201)
+            .json({
+                _id: newUser._id,
+                username: newUser.username,
+                email: newUser.email,
+                role: newUser.role,
+                partyID: newUser.partyID,
+                token,
+            });
     } catch (err) {
         res.status(500).json({ message: 'Registration failed', error: err.message });
     }
@@ -52,19 +60,39 @@ export const loginUser = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user || !(await user.matchPassword(password))) {
-            return res.status(401).json({ message: 'Invalid credentials'});
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         const token = generateToken(user);
-        res.json({
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-            role: user.role,
-            partyID: user.partyID,
-            token,
-        });
+        res
+            .cookie('jwt', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: 'Lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            })
+            .status(200)
+            .json({
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                partyID: user.partyID,
+                token,
+            });
     } catch (err) {
         res.status(500).json({ message: 'Login failed', error: err.message });
     }
+};
+
+export const getCurrentUser = async (req, res) => {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    res.status(200).json({
+        _id: req.user._id,
+        username: req.user.username,
+        email: req.user.email,
+        role: req.user.role,
+        partyId: req.user.partyId,
+    });
 };

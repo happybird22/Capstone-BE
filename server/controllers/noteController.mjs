@@ -13,7 +13,7 @@ export const createSessionNote = async (req, res) => {
     } = req.body;
 
     try {
-        const newNote = await SessionNote.create({
+        const createSessionNote = await SessionNote.create({
         campaignTitle,
         sessionDate,
         notes,
@@ -21,10 +21,15 @@ export const createSessionNote = async (req, res) => {
         notablePlaces,
         memorableMoments,
         author: req.user._id,
-        partyId: req.user.partyId,
         visibility: visibility || 'private',
         sharedWith: visibility === 'one' ? sharedWith : [],
         });
+
+        if (req.user.partyId) {
+            noteData.partyId = req.user.partyId;
+        }
+
+        const newNote = await SessionNote.create(noteData);
 
         res.status(201).json(newNote);
     } catch {
