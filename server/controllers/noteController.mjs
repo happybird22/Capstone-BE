@@ -165,7 +165,7 @@ export const getSessionNoteById = async (req, res) => {
             return res.status(404).json({ message: 'Note not found' });
         }
 
-        const isOwner = note.user.equals(userId);
+        const isOwner = note.author.equals(userId);
         const isGM = req.user.role === 'gm';
         const isShared = note.visibility === 'shared' || note.sharedWith.includes(userId);
 
