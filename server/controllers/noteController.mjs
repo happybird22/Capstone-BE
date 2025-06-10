@@ -13,7 +13,7 @@ export const createSessionNote = async (req, res) => {
     } = req.body;
 
     try {
-        const createSessionNote = await SessionNote.create({
+        const noteData = {
         campaignTitle,
         sessionDate,
         notes,
@@ -23,7 +23,7 @@ export const createSessionNote = async (req, res) => {
         author: req.user._id,
         visibility: visibility || 'private',
         sharedWith: visibility === 'one' ? sharedWith : [],
-        });
+        };
 
         if (req.user.partyId) {
             noteData.partyId = req.user.partyId;
