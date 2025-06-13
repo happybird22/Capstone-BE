@@ -22,3 +22,8 @@ This is the backend for the **D&D Session Journal**, a MERN-stack application th
 - Private, shared-with-all, or shared-with-specific visibility options
 
 Frontend Repo link: https://github.com/happybird22/Capstone-FE
+
+## Stretch Goals
+- Add additional dynamic User Parties section to display parties and invite codes
+- Add helpful hints for both DMs and Player Characters
+- Add shared inventory for all parties
